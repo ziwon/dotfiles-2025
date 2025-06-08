@@ -1,0 +1,372 @@
+# Modern Git Configuration (2025)
+# Optimized for performance, security, and developer experience
+
+[user]
+	name = Aaron Yoon
+	email = yngpil.yoon@gmail.com
+	signingkey = B71B7B232316168A
+
+[core]
+	editor = nvim
+	# Use delta for better diff viewing (replaces diff-so-fancy)
+	pager = delta
+	excludesfile = ~/.gitexclude
+	trustctime = false
+	fscache = true
+	autocrlf = false
+	quotepath = false
+	precomposeunicode = true
+	untrackedCache = true
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+	# Modern file monitoring for better performance
+	fsmonitor = true
+	# Improved compression for better network performance
+	compression = 9
+	# Use modern hash algorithm when available
+	repositoryformatversion = 1
+
+[init]
+	# Use 'main' as default branch name
+	defaultBranch = main
+
+[delta]
+	# Delta configuration for beautiful diffs
+	navigate = true
+	light = false
+	line-numbers = true
+	side-by-side = false
+	syntax-theme = Catppuccin-mocha
+	plus-style = "syntax #012800"
+	minus-style = "syntax #340001"
+	map-styles = "bold purple => syntax #330f29, bold cyan => syntax #0e4b99"
+	file-style = "bold yellow ul"
+	file-decoration-style = "yellow ul ol"
+	hunk-header-decoration-style = "cyan box ul"
+	line-numbers-left-style = "cyan"
+	line-numbers-right-style = "cyan"
+	line-numbers-minus-style = "124"
+	line-numbers-plus-style = "28"
+
+[interactive]
+	diffFilter = delta --color-only
+
+[color]
+	ui = auto
+	# Enable true color support
+	pager = true
+
+[color "branch"]
+	current = "yellow reverse"
+	local = "yellow bold"
+	remote = "green bold"
+	upstream = "cyan bold"
+
+[color "diff"]
+	meta = "11"
+	frag = "magenta bold"
+	commit = "yellow bold"
+	old = "red bold"
+	new = "green bold"
+	whitespace = "red reverse"
+
+[color "status"]
+	added = "green bold"
+	changed = "yellow bold"
+	untracked = "cyan"
+	branch = "magenta bold"
+	nobranch = "red bold"
+
+[color "grep"]
+	linenumber = "cyan"
+	match = "yellow bold"
+	filename = "magenta"
+
+[diff]
+	renames = copies
+	tool = nvimdiff
+	algorithm = histogram
+	# Show moved lines in different color
+	colorMoved = default
+	# Improve submodule diff display
+	submodule = log
+	# Use better word-level diff
+	wordRegex = [^[:space:]]
+	# Context lines for better readability
+	context = 5
+
+[difftool]
+	prompt = false
+	trustExitCode = true
+
+[difftool "nvimdiff"]
+	cmd = nvim -d "$LOCAL" "$REMOTE"
+
+[apply]
+	whitespace = fix
+
+[log]
+	date = iso8601
+	# Show abbreviated commit object name
+	abbrevCommit = true
+	# Follow file renames in log
+	follow = true
+
+[fetch]
+	prune = true
+	# Automatically fetch tags
+	tags = true
+	# Parallel fetching for better performance
+	parallel = 0
+	# Write commit graph for better performance
+	writeCommitGraph = true
+
+[branch]
+	autosetuprebase = always
+	# Sort branches by most recent commit
+	sort = -committerdate
+
+[push]
+	default = simple
+	followTags = true
+	# Automatically set up tracking
+	autoSetupRemote = true
+	# Use simple push strategy
+	recurseSubmodules = check
+
+[pull]
+	rebase = true
+	# Automatically stash before pull if working directory is dirty
+	autoStash = true
+
+[merge]
+	tool = nvimdiff
+	conflictstyle = diff3
+	# Automatically resolve conflicts for rename/rename conflicts
+	renameLimit = 5000
+	# Show common ancestor in merge conflicts
+	conflictStyle = zdiff3
+
+[mergetool]
+	prompt = false
+	keepBackup = false
+	trustExitCode = true
+
+[mergetool "nvimdiff"]
+	cmd = nvim -d "$LOCAL" "$BASE" "$REMOTE" "$MERGED" -c '$wincmd w' -c 'wincmd J'
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+	# Automatically update refs after rebase
+	updateRefs = true
+
+[commit]
+	gpgsign = true
+	# Show diff in commit message editor
+	verbose = true
+	# Clean up commit messages
+	cleanup = scissors
+
+[tag]
+	# Sign tags by default
+	gpgsign = true
+	# Sort tags by version
+	sort = version:refname
+
+[rerere]
+	enabled = true
+	autoUpdate = true
+
+[stash]
+	showPatch = true
+	showStat = true
+
+[status]
+	showStash = true
+	showUntrackedFiles = all
+	# Show branch and tracking information
+	branch = true
+	# Show short format
+	short = false
+	# Show submodule summary
+	submoduleSummary = true
+
+[submodule]
+	fetchJobs = 0
+	recurse = true
+
+[help]
+	autocorrect = 1
+
+[advice]
+	# Disable some verbose advice messages
+	pushUpdateRejected = false
+	statusHints = false
+	commitBeforeMerge = false
+	resolveConflict = false
+	implicitIdentity = false
+	detachedHead = false
+
+[feature]
+	# Enable experimental features for better performance
+	manyFiles = true
+	experimental = true
+
+[index]
+	# Use new index format for better performance
+	version = 4
+
+[pack]
+	# Use multiple threads for packing
+	threads = 0
+	# Better compression
+	window = 250
+	depth = 250
+
+[gc]
+	# Automatic garbage collection
+	auto = 6700
+	autoPackLimit = 50
+	autoDetach = true
+	# Write commit graph during gc
+	writeCommitGraph = true
+
+[maintenance]
+	# Enable background maintenance
+	auto = true
+	strategy = incremental
+
+[protocol]
+	# Prefer SSH over HTTPS for security
+	version = 2
+
+[transfer]
+	# Verify objects during transfer
+	fsckobjects = true
+
+[receive]
+	# Verify objects when receiving
+	fsckObjects = true
+
+[credential]
+	# Cache credentials for 8 hours
+	helper = cache --timeout=28800
+
+[credential "https://github.com"]
+	username = ziwon
+	# Use GitHub CLI for authentication
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gitlab.com"]
+	helper = !/usr/bin/glab auth git-credential
+
+# Git LFS configuration
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+# Modern aliases for productivity
+[alias]
+	# Short commands
+	a = add
+	aa = add --all
+	ap = add --patch
+	b = branch
+	c = commit
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cm = commit -m
+	co = checkout
+	cob = checkout -b
+	d = diff
+	dc = diff --cached
+	f = fetch
+	l = log --oneline --graph --decorate
+	p = push
+	pf = push --force-with-lease
+	pl = pull
+	r = reset
+	rh = reset --hard
+	rs = restore
+	s = status --short --branch
+	st = stash
+	sw = switch
+
+	# Advanced commands
+	aliases = config --get-regexp alias
+	amend = commit --amend --no-edit
+	br = branch -vv
+	branches = branch --all
+	contributors = shortlog --summary --numbered --email
+	discard = checkout --
+	find = log --all --full-history -- 
+	graph = log --all --graph --pretty=format:'%C(auto)%h%d %s %C(cyan)(%ar)%C(reset)'
+	hist = log --pretty=format:'%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) | %s%C(auto)%d%C(reset) %C(green)[%an]%C(reset)' --graph --date=short
+	ignored = ls-files --others --ignored --exclude-standard
+	last = log -1 HEAD
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	overview = log --all --oneline --no-merges
+	peek = log --oneline --max-count=10
+	recent = branch --sort=-committerdate
+	remotes = remote -v
+	staged = diff --cached
+	today = log --since='1 day ago' --oneline --author='Youngpil Yoon'
+	tree = log --graph --pretty=oneline --abbrev-commit
+	undo = reset HEAD~1 --mixed
+	unmerged = diff --name-only --diff-filter=U
+	unstage = reset HEAD --
+	who = shortlog -sne
+	work = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+	# Cleanup commands
+	cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+	obliterate = !sh -c 'git branch -D $1 && git push origin :$1' -
+	
+	# Advanced workflows
+	fixup = commit --fixup
+	squash = commit --squash
+	wip = commit -am "WIP: work in progress"
+	unwip = reset HEAD~1
+
+	# File operations
+	assume = update-index --assume-unchanged
+	unassume = update-index --no-assume-unchanged
+	assumed = !git ls-files -v | grep ^h | cut -c 3-
+
+	# Submodule helpers
+	sup = submodule update --init --recursive
+	spull = submodule foreach git pull origin main
+
+[gpg]
+	program = gpg
+	format = openpgp
+
+# URL rewrites for different contexts
+[url "git@github.com:"]
+	insteadOf = gh:
+	insteadOf = github:
+
+[url "git@gitlab.com:"]
+	insteadOf = gl:
+	insteadOf = gitlab:
+
+[url "git@github-deepseet:deepseet/"]
+	insteadOf = git@github.com:deepseet/
+
+# Include additional configuration files
+[include]
+	# Work-specific configuration
+	path = ~/.gitconfig.work
+	# Local overrides
+	path = ~/.gitconfig.local
+	# Machine-specific settings
+	path = ~/.gitconfig.machine
+
+# Conditional includes based on directory
+[includeIf "gitdir:~/Work/"]
+	path = ~/.gitconfig.work
+
+[includeIf "gitdir:~/Projects/personal/"]
+	path = ~/.gitconfig.personal

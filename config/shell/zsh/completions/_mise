@@ -1,0 +1,38 @@
+#compdef mise
+
+_mise() {
+    local context state line
+    
+    _arguments -C \
+        '1: :->commands' \
+        '*: :->args'
+    
+    case $state in
+        commands)
+            local commands=(
+                'install:Install tool versions'
+                'use:Set tool version for project'
+                'list:List installed tools'
+                'uninstall:Uninstall tool versions'
+                'current:Show current tool versions'
+                'global:Set global tool versions'
+                'local:Set local tool versions'
+                'tasks:List available tasks'
+                'run:Run a task'
+            )
+            _describe 'commands' commands
+            ;;
+        args)
+            case $words[2] in
+                install|use|uninstall)
+                    _values 'tools' python node go terraform
+                    ;;
+                run)
+                    _values 'tasks' $(mise tasks 2>/dev/null | awk '{print $1}')
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_mise "$@"

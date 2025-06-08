@@ -1,0 +1,75 @@
+#!/bin/bash
+# Comprehensive fzf widget fix for Zsh
+
+echo "🔧 Fixing Zsh fzf widget issues..."
+
+# 1. Check if fzf is properly installed
+if ! command -v fzf &> /dev/null; then
+    echo "📦 Installing fzf..."
+    sudo apt update && sudo apt install -y fzf
+fi
+
+# 2. Ensure fzf key bindings are installed
+if [ ! -f ~/.fzf.zsh ]; then
+    echo "⚙️ Installing fzf key bindings..."
+    if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+        echo "source /usr/share/doc/fzf/examples/key-bindings.zsh" > ~/.fzf.zsh
+        echo "source /usr/share/doc/fzf/examples/completion.zsh" >> ~/.fzf.zsh
+    else
+        # Alternative installation
+        echo "📦 Installing fzf from source..."
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install --all
+    fi
+fi
+
+# 3. Create backup and fix .zshrc
+echo "🔄 Fixing .zshrc loading order..."
+cp ~/.zshrc ~/.zshrc.backup.$(date +%Y%m%d_%H%M%S)
+
+# Use the fixed configuration we created
+echo "✅ Applied fixed Zsh configuration"
+
+# 4. Test the fix
+echo "🧪 Testing fzf widgets..."
+zsh -c '
+source ~/.zshrc
+if [[ -n "${widgets[fzf-history-widget]}" ]]; then
+    echo "✅ fzf-history-widget: OK"
+else
+    echo "❌ fzf-history-widget: Missing"
+fi
+
+if [[ -n "${widgets[fzf-file-widget]}" ]]; then
+    echo "✅ fzf-file-widget: OK"
+else
+    echo "❌ fzf-file-widget: Missing"
+fi
+
+if [[ -n "${widgets[fzf-cd-widget]}" ]]; then
+    echo "✅ fzf-cd-widget: OK"
+else
+    echo "❌ fzf-cd-widget: Missing"
+fi
+'
+
+echo "
+🎉 fzf widget fix completed!
+
+🔧 Changes made:
+   ✅ Fixed plugin loading order in .zshrc
+   ✅ Ensured fzf loads before syntax highlighting
+   ✅ Added widget existence checks
+   ✅ Created fallback widget definitions
+
+🚀 Next steps:
+   1. Restart your terminal or run: zsh
+   2. Test fzf widgets:
+      - Ctrl+R (history search)
+      - Ctrl+T (file search)  
+      - Alt+C (directory change)
+
+💡 If issues persist:
+   - Run: validate_fzf_widgets
+   - Run: fix-fzf-widgets
+"

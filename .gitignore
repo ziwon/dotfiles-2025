@@ -1,0 +1,31 @@
+# Claude Code settings
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Personal files (don't commit personal info)
+config/git/gitconfig-personal
+*.backup
+.env
+.secrets
+
+# Cache
+.cache/
+node_modules/
+__pycache__/
+*.pyc
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~

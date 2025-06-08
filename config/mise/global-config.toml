@@ -1,0 +1,23 @@
+# Global mise configuration
+[settings]
+experimental = true
+#node_corepack = true
+
+[tools]
+python = "3.12"
+node = "22"
+go = "latest"
+terraform = "latest"
+kubectl = "latest"
+helm = "latest"
+docker-compose = "latest"
+lazygit = "latest"
+uv = "latest"
+
+[env]
+# Development environment variables
+EDITOR = "nvim"
+VISUAL = "nvim"
+PYTHON_CONFIGURE_OPTS = "--enable-shared"
+NODE_OPTIONS = "--max-old-space-size=4096"
+

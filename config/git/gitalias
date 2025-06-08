@@ -1,0 +1,69 @@
+# Enhanced Git aliases for productivity
+
+[alias]
+    # Quick status and info
+    s = status --short --branch
+    ss = status
+    info = remote show origin
+
+    # Commit shortcuts
+    c = commit
+    ca = commit --amend
+    can = commit --amend --no-edit
+    cm = commit -m
+    cma = commit -am
+    
+    # Branch management
+    b = branch
+    ba = branch -a
+    bd = branch -d
+    bD = branch -D
+    co = checkout
+    cob = checkout -b
+    sw = switch
+    swc = switch -c
+    
+    # Diff and log
+    d = diff
+    dc = diff --cached
+    ds = diff --stat
+    l = log --oneline --graph --decorate
+    ll = log --graph --pretty=format:'%C(yellow)%h%C(auto)%d%Creset %s %C(cyan)(%ar)%Creset %C(green)<%an>%Creset'
+    lol = log --oneline --graph --all --decorate
+    
+    # Remote operations
+    f = fetch
+    fa = fetch --all
+    p = push
+    pf = push --force-with-lease
+    pl = pull
+    plu = pull upstream
+    pu = push -u origin HEAD
+    
+    # Stash operations
+    st = stash
+    stp = stash pop
+    stl = stash list
+    sts = stash show -p
+    
+    # Reset and restore
+    r = reset
+    rh = reset --hard
+    rs = restore
+    unstage = restore --staged
+    
+    # Advanced operations
+    fixup = commit --fixup
+    squash = commit --squash
+    ri = rebase --interactive
+    rc = rebase --continue
+    ra = rebase --abort
+    
+    # Cleanup
+    cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+    prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
+    
+    # Utilities
+    aliases = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^[:space:]]*\\)/\\1/' | sort
+    ignore = !gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi
+    whoami = config user.email
