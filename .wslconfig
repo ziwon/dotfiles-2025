@@ -1,0 +1,16 @@
+[interop]
+appendWindowsPath = false
+[user]
+default = aaron
+[automount]
+enabled = true
+[boot]
+command = "zsh"
+[wsl2]
+networkingMode=mirrored
+[experimental]
+hostAddressLoopback=true
+autoMemoryReclaim=gradual
+dnsTunneling=true
+firewall=true
+autoProxy=true
