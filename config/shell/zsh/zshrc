@@ -1,13 +1,12 @@
 # Modern Zsh Configuration (2025) - Fixed fzf widget loading
 # ================================
 
+# Local BIN
+export PATH=$PATH:/$HOME/.local/bin
+
 # Performance monitoring (optional - remove in production)
 # zmodload zsh/zprof
 
-# Enable Powerlevel10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # Zinit installation and setup
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -25,9 +24,7 @@ zinit light-mode for \
 # ================================
 
 # Oh My Posh (cross-platform, highly customizable)
-if command -v oh-my-posh &> /dev/null; then
-    eval "$(oh-my-posh init zsh --config $HOME/Workspace/oh-my-posh/themes/quick-term.omp.json)"
-fi
+eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
 
 # ================================
 # Core Plugins (Load Early)
@@ -211,9 +208,6 @@ fi
 # ================================
 # Environment Variables
 # ================================
-# Local BIN
-export PATH=$PATH:/home/aaron/.local/bin
-
 # Editor
 export EDITOR="nvim"
 export VISUAL="nvim"
