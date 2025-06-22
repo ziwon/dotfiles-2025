@@ -2,9 +2,43 @@
 local M = {}
 
 function M.setup()
-  -- Python provider setup with mise integration
+  -- Python provider setup with UV and mise integration
   local function setup_python_provider()
-    -- Try to get Python from mise first
+    -- First check for UV virtual environment in current directory or parent directories
+    local function find_uv_venv()
+      local current_dir = vim.fn.getcwd()
+      local check_dir = current_dir
+      
+      -- Look for .venv in current directory and parent directories
+      for _ = 1, 10 do -- Limit search depth
+        local venv_path = check_dir .. "/.venv"
+        local uv_lock = check_dir .. "/uv.lock"
+        
+        if vim.fn.isdirectory(venv_path) == 1 and vim.fn.filereadable(uv_lock) == 1 then
+          local python_bin = venv_path .. "/bin/python"
+          if vim.fn.executable(python_bin) == 1 then
+            return python_bin
+          end
+        end
+        
+        local parent_dir = vim.fn.fnamemodify(check_dir, ":h")
+        if parent_dir == check_dir then
+          break -- Reached root directory
+        end
+        check_dir = parent_dir
+      end
+      
+      return nil
+    end
+    
+    -- Try UV virtual environment first
+    local uv_python = find_uv_venv()
+    if uv_python then
+      vim.g.python3_host_prog = uv_python
+      return true
+    end
+    
+    -- Try to get Python from mise second
     local mise_python_cmd = "mise where python 2>/dev/null || echo ''"
     local mise_python_path = vim.fn.system(mise_python_cmd):gsub("%s+", "")
     
