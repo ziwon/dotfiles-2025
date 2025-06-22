@@ -352,9 +352,6 @@
 	insteadOf = gl:
 	insteadOf = gitlab:
 
-[url "git@github-deepseet:deepseet/"]
-	insteadOf = git@github.com:deepseet/
-
 # Include additional configuration files
 [include]
 	# Work-specific configuration

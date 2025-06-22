@@ -236,10 +236,13 @@ export PYTHONDONTWRITEBYTECODE=1
 export PYTHONUNBUFFERED=1
 export NODE_OPTIONS="--max-old-space-size=4096"
 
+# Cuda
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
 # ETC
 export GPG_TTY=$(tty)  
 export GPG_AGENT_INFO=""
-
 
 # ================================
 # Aliases
@@ -314,8 +317,9 @@ alias python=python3
 alias pip=pip3
 
 # Vim
-alias vim=nvim
-alias vi=nvim
+alias vim='nvim'
+alias vi='nvim'
+alias v='nvim'
 
 # System aliases
 alias ..='cd ..'
@@ -345,6 +349,9 @@ alias free='free -h'
 alias ping='ping -c 5'
 alias ports='netstat -tulanp'
 
+alias wl-copy="clip.exe"
+alias wl-paste="powershell.exe -command \"Get-Clipboard\""
+
 # Safety nets
 alias rm='rm -i'
 alias cp='cp -i'
@@ -357,11 +364,8 @@ alias mv='mv -i'
 # Load custom functions
 [ -f ~/.config/zsh/functions.zsh ] && source ~/.config/zsh/functions.zsh
 
-# Load theme management
-# [ -f ~/.config/zsh/themes.zsh ] && source ~/.config/zsh/themes.zsh
-
 # Load tmux integration
-[ -f ~/.config/zsh/tmux.zsh ] && source ~/.config/zsh/tmux.zsh
+# [ -f ~/.config/zsh/tmux.zsh ] && source ~/.config/zsh/tmux.zsh
 
 # Load machine-specific configuration
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local

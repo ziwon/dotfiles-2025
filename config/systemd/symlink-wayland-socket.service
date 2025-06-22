@@ -1,0 +1,13 @@
+[Unit]
+Description=Create symlink for Wayland socket in WSL
+After=default.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/mkdir -p /run/user/1000
+ExecStart=/bin/bash -c 'if [ -S /mnt/wslg/runtime-dir/wayland-0 ]; then ln -sf /mnt/wslg/runtime-dir/wayland-0 /run/user/1000/wayland-0; fi'
+ExecStop=/bin/rm -f /run/user/1000/wayland-0
+
+[Install]
+WantedBy=default.target

@@ -96,7 +96,7 @@ echo "
    3. Test setup: nvim +checkhealth
    4. Download AI models: ollama pull codestral
 
-📚 Documentation: https://github.com/your-username/dotfiles-2025
+📚 Documentation: https://github.com/ziwon/dotfiles-2025
 
 ✨ Happy coding!
 "
