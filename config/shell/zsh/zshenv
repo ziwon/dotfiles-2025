@@ -1,2 +1,2 @@
 export W="$HOME/WORKSPACE"
-export POSH_PICK_THEME="$HOME/.poshthemes/quick-term.omp.json"
+export POSH_PICK_THEME="$HOME/.poshthemes/quick-term-python.omp.json"

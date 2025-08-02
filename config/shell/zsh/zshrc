@@ -1,4 +1,4 @@
-# Modern Zsh Configuration (2025) - Fixed fzf widget loading
+# Modern Zsh Configuration (2025) - Fixed Python virtualenv display
 # ================================
 
 # Local BIN
@@ -6,7 +6,6 @@ export PATH=$PATH:/$HOME/.local/bin
 
 # Performance monitoring (optional - remove in production)
 # zmodload zsh/zprof
-
 
 # Zinit installation and setup
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -20,17 +19,35 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 # ================================
+# Virtual Environment Configuration (Load Early)
+# ================================
+
+# Set VIRTUAL_ENV_DISABLE_PROMPT to prevent default (venv) prefix
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+# Modern virtualenv prompt function
+function virtualenv_prompt_info() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        local venv_name=$(basename "$VIRTUAL_ENV")
+        echo "%F{cyan}(%F{yellow}${venv_name}%F{cyan})%f "
+    fi
+}
+
+# ================================
 # Theme and Prompt
 # ================================
 
-# Oh My Posh (cross-platform, highly customizable)
-eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
+# Check if Oh My Posh theme supports Python or use fallback
+if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
+    # Use Oh My Posh with custom theme
+    eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
+fi
 
 # ================================
 # Core Plugins (Load Early)
 # ================================
 
-# Completions (load early)
+# Completions
 zinit light zsh-users/zsh-completions
 
 # History substring search
@@ -367,8 +384,6 @@ alias mv='mv -i'
 # Load work-specific configuration
 [ -f ~/.zshrc.work ] && source ~/.zshrc.work
 
-# Oh My Posh themes can be customized in the config file above
-
 # WSL2 specific configuration
 if grep -q "microsoft" /proc/version 2>/dev/null; then
     # WSL2 specific aliases and functions
@@ -383,3 +398,5 @@ fi
 
 # Uncomment to profile zsh startup time
 # zprof
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

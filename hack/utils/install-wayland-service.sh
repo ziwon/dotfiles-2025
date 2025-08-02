@@ -25,4 +25,3 @@ systemctl --user start "$SERVICE_FILE"
 systemctl --user status "$SERVICE_FILE" --no-pager
 
 echo "Wayland socket symlink service installed and started successfully!"
-

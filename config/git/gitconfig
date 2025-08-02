@@ -29,13 +29,13 @@
 	# Use 'main' as default branch name
 	defaultBranch = main
 
-[delta]
-	# Delta configuration for beautiful diffs
+[delta] 
+  	# Delta configuration for beautiful diffs
+  	features = catppuccin-mocha
 	navigate = true
 	light = false
 	line-numbers = true
 	side-by-side = false
-	syntax-theme = Catppuccin-mocha
 	plus-style = "syntax #012800"
 	minus-style = "syntax #340001"
 	map-styles = "bold purple => syntax #330f29, bold cyan => syntax #0e4b99"
@@ -360,6 +360,8 @@
 	path = ~/.gitconfig.local
 	# Machine-specific settings
 	path = ~/.gitconfig.machine
+	# delta 
+	path = ~/.config/delta/catppuccin.gitconfig 
 
 # Conditional includes based on directory
 [includeIf "gitdir:~/Work/"]

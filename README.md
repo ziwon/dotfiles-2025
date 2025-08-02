@@ -52,17 +52,17 @@ ln -sf ~/dotfiles-2025/config/nvim ~/.config/nvim
 ```
 dotfiles-2025/
 ├── config/                 # Application configurations
-│   ├── git/               # Git config, aliases, global ignore
-│   ├── nvim/              # Neovim LazyVim setup
-│   ├── shell/             # Shell configurations
-│   │   ├── bash/         # Basic bash setup
-│   │   └── zsh/          # Comprehensive zsh setup
-│   ├── tmux/              # Tmux configuration
-│   └── mise/              # Tool version management
+│   ├── git/                # Git config, aliases, global ignore
+│   ├── nvim/               # Neovim LazyVim setup
+│   ├── shell/              # Shell configurations
+│   │   ├── bash/           # Basic bash setup
+│   │   └── zsh/            # Comprehensive zsh setup
+│   ├── tmux/               # Tmux configuration
+│   └── mise/               # Tool version management
 ├── hack/                   # Installation and utility scripts
-│   ├── install/           # Installation scripts
-│   ├── setup/             # Setup utilities
-│   └── utils/             # Maintenance utilities
+│   ├── install/            # Installation scripts
+│   ├── setup/              # Setup utilities
+│   └── utils/              # Maintenance utilities
 └── docs/                   # Documentation
 ```
 
