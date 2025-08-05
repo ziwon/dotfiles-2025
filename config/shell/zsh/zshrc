@@ -1,16 +1,12 @@
-# Modern Zsh Configuration (2025) - Fixed Python virtualenv display
+# Modern Zsh Configuration (2025) 
 # ================================
-
 # Local BIN
 export PATH=$PATH:/$HOME/.local/bin
-
 # Performance monitoring (optional - remove in production)
 # zmodload zsh/zprof
-
 # Zinit installation and setup
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
-
 # Load annexes
 zinit light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
@@ -19,131 +15,25 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 # ================================
-# Virtual Environment Configuration (Load Early)
+# COMPLETION SYSTEM INITIALIZATION 
 # ================================
-
-# Set VIRTUAL_ENV_DISABLE_PROMPT to prevent default (venv) prefix
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-
-# Modern virtualenv prompt function
-function virtualenv_prompt_info() {
-    if [[ -n "$VIRTUAL_ENV" ]]; then
-        local venv_name=$(basename "$VIRTUAL_ENV")
-        echo "%F{cyan}(%F{yellow}${venv_name}%F{cyan})%f "
-    fi
-}
-
-# ================================
-# Theme and Prompt
-# ================================
-
-# Check if Oh My Posh theme supports Python or use fallback
-if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
-    # Use Oh My Posh with custom theme
-    eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
+# Load completion module and initialize completion system
+zmodload zsh/complist
+autoload -Uz compinit
+# Speed up compinit by checking once a day
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
 fi
 
 # ================================
-# Core Plugins (Load Early)
+# Zsh Configuration Options
 # ================================
-
-# Completions
-zinit light zsh-users/zsh-completions
-
-# History substring search
-zinit light zsh-users/zsh-history-substring-search
-
-# Auto-close quotes and brackets
-zinit light hlissner/zsh-autopair
-
-# ================================
-# fzf Setup (Load Before Syntax Highlighting)
-# ================================
-
-# Load fzf if available
-if command -v fzf &> /dev/null; then
-    # fzf configuration
-    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-    
-    # Custom fzf configuration
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-
-    # fzf colors (catppuccin theme)
-    export FZF_DEFAULT_OPTS="
-    --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
-    --color=fg:#cdd6f4,header:#f38ba8,info:#cba6ac,pointer:#f5e0dc
-    --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6ac,hl+:#f38ba8
-    --height 60% --layout=reverse --border --margin=1 --padding=1"
-fi
-
-# ================================
-# Syntax Highlighting (Load After fzf)
-# ================================
-
-# Syntax highlighting (must be loaded after fzf and autosuggestions)
-zinit light zdharma-continuum/fast-syntax-highlighting
-
-# Autosuggestions (load after syntax highlighting)
-zinit light zsh-users/zsh-autosuggestions
-
-# ================================
-# Productivity Plugins
-# ================================
-
-# Directory jumping
-zinit light agkozak/zsh-z
-
-# Git aliases and functions
-zinit light unixorn/git-extra-commands
-
-# Better cd command
-zinit light b4b4r07/enhancd
-
-# Command line fuzzy finder integration (load after fzf setup)
-zinit light Aloxaf/fzf-tab
-
-# Colored man pages
-zinit light ael-code/zsh-colored-man-pages
-
-# Docker completion and helpers
-# zinit light docker/cli contrib/completion/zsh
-
-# Kubernetes helpers
-zinit light bonnefoa/kubectl-fzf
-
-# Python virtual environment management
-zinit light MichaelAquilina/zsh-autoswitch-virtualenv
-
-# ================================
-# Development Tools Integration
-# ================================
-
-# mise (tool version management)
-if command -v mise &> /dev/null; then
-    eval "$(mise activate zsh)"
-fi
-
-# zoxide (smarter cd)
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init zsh)"
-fi
-
-# thefuck (command correction)
-if command -v thefuck &> /dev/null; then
-    eval $(thefuck --alias)
-fi
-
-# ================================
-# Zsh Configuration
-# ================================
-
 # History configuration
 HISTFILE=~/.zsh_history
-HISTSIZE=50000
-SAVEHIST=50000
-
+HISTSIZE=500000
+SAVEHIST=500000
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
@@ -161,12 +51,17 @@ setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
 
-# Completion options
+# Completion options 
 setopt COMPLETE_ALIASES
 setopt COMPLETE_IN_WORD
 setopt ALWAYS_TO_END
 setopt AUTO_MENU
 setopt AUTO_LIST
+setopt auto_param_slash      # Add trailing slash to directory completions
+setopt no_case_glob          # Case-insensitive globbing
+setopt no_case_match         # Case-insensitive matching
+setopt globdots              # Include dotfiles in globbing
+setopt extended_glob         # Use extended globbing syntax
 
 # Other useful options
 setopt CORRECT
@@ -176,41 +71,125 @@ setopt MULTIOS
 setopt NO_BEEP
 
 # ================================
-# Completion System
+# Completion Styling 
 # ================================
-
 FPATH="$HOME/.docker/completions:$FPATH"
-autoload -Uz compinit
-# Speed up compinit by checking once a day
-if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-    compinit
-else
-    compinit -C
-fi
-
-# Completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+# Fixed matcher-list - using only the comprehensive definition
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '[%d]'
 
-# Case-insensitive completion
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# ================================
+# Virtual Environment Configuration
+# ================================
+# Set VIRTUAL_ENV_DISABLE_PROMPT to prevent default (venv) prefix
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+# Modern virtualenv prompt function
+function virtualenv_prompt_info() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        local venv_name=$(basename "$VIRTUAL_ENV")
+        echo "%F{cyan}(%F{yellow}${venv_name}%F{cyan})%f "
+    fi
+}
 
 # ================================
-# Key Bindings (Set After fzf Load)
+# Theme and Prompt
 # ================================
+# Check if Oh My Posh theme supports Python or use fallback
 
+# Activate the brew shell before invoking oh-my-posh
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
+    # Use Oh My Posh with custom theme
+    eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
+fi
+
+# ================================
+# Core Plugins (LOADED AFTER COMPLETION INIT)
+# ================================
+# Completions
+zinit light zsh-users/zsh-completions
+# History substring search
+zinit light zsh-users/zsh-history-substring-search
+# Auto-close quotes and brackets
+zinit light hlissner/zsh-autopair
+
+# ================================
+# fzf Setup (LOADED BEFORE SYNTAX HIGHLIGHTING)
+# ================================
+# Load fzf if available
+if command -v fzf &> /dev/null; then
+    # fzf configuration
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    
+    # Custom fzf configuration
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    # fzf colors (catppuccin theme)
+    export FZF_DEFAULT_OPTS="
+    --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
+    --color=fg:#cdd6f4,header:#f38ba8,info:#cba6ac,pointer:#f5e0dc
+    --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6ac,hl+:#f38ba8
+    --height 60% --layout=reverse --border --margin=1 --padding=1"
+fi
+
+# ================================
+# Syntax Highlighting (LOADED AFTER fzf)
+# ================================
+# Syntax highlighting (must be loaded after fzf and autosuggestions)
+zinit light zdharma-continuum/fast-syntax-highlighting
+# Autosuggestions (load after syntax highlighting)
+zinit light zsh-users/zsh-autosuggestions
+
+# ================================
+# Productivity Plugins (LOADED LAST)
+# ================================
+# Directory jumping
+zinit light agkozak/zsh-z
+# Git aliases and functions
+zinit light unixorn/git-extra-commands
+# Better cd command
+zinit light b4b4r07/enhancd
+# Command line fuzzy finder integration (load after fzf setup)
+zinit light Aloxaf/fzf-tab
+# Colored man pages
+zinit light ael-code/zsh-colored-man-pages
+# Docker completion and helpers
+# zinit light docker/cli contrib/completion/zsh
+# Kubernetes helpers
+zinit light bonnefoa/kubectl-fzf
+# Python virtual environment management
+zinit light MichaelAquilina/zsh-autoswitch-virtualenv
+
+# ================================
+# Development Tools Integration
+# ================================
+# mise (tool version management)
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
+fi
+# zoxide (smarter cd)
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+# thefuck (command correction)
+if command -v thefuck &> /dev/null; then
+    eval $(thefuck --alias)
+fi
+
+# ================================
+# Key Bindings (SET AFTER fzf LOAD)
+# ================================
 # Emacs-style key bindings
 bindkey -e
-
 # History search
 bindkey '^P' history-substring-search-up
 bindkey '^N' history-substring-search-down
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
 # fzf key bindings (only if widgets exist)
 if [[ -n "${widgets[fzf-history-widget]}" ]]; then
     bindkey '^R' fzf-history-widget
@@ -228,29 +207,23 @@ fi
 # Editor
 export EDITOR="nvim"
 export VISUAL="nvim"
-
 # Pager
 export PAGER="less"
 export LESS="-R"
-
 # Colors
 export CLICOLOR=1
 export LS_COLORS="$(vivid generate catppuccin-mocha 2>/dev/null || dircolors -b)"
 export POWERLEVEL9K_INSTANT_PROMPT=quiet
-
 # Language
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-
 # Development
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONUNBUFFERED=1
 export NODE_OPTIONS="--max-old-space-size=4096"
-
 # Cuda
 export PATH=/usr/local/cuda/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-
 # ETC
 export GPG_TTY=$(tty)  
 export GPG_AGENT_INFO=""
@@ -258,7 +231,6 @@ export GPG_AGENT_INFO=""
 # ================================
 # Aliases
 # ================================
-
 # Modern replacements
 if command -v eza &> /dev/null; then
     alias ls='eza --color=auto --group-directories-first'
@@ -266,25 +238,20 @@ if command -v eza &> /dev/null; then
     alias la='eza -a --color=auto --group-directories-first'
     alias lt='eza -T --color=auto --group-directories-first'
 fi
-
 if command -v batcat &> /dev/null; then
     alias cat='batcat --style=plain'
 elif command -v bat &> /dev/null; then
     alias cat='bat --style=plain'
 fi
-
 if command -v rg &> /dev/null; then
     alias grep='rg'
 fi
-
 if command -v fd &> /dev/null; then
     alias find='fd'
 fi
-
 if command -v zoxide &> /dev/null; then
     alias cd='z'
 fi
-
 # Git aliases
 alias g='git'
 alias ga='git add'
@@ -300,7 +267,6 @@ alias gpl='git pull'
 alias gs='git status'
 alias gst='git stash'
 alias gwip='git add -A && git commit -m "WIP"'
-
 # Docker aliases
 alias d='docker'
 alias dc='docker-compose'
@@ -309,60 +275,49 @@ alias dpa='docker ps -a'
 alias di='docker images'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi $(docker images -q)'
-
 # Kubernetes aliases
 alias k='kubectl'
 alias kg='kubectl get'
 alias kd='kubectl describe'
 alias ka='kubectl apply'
 alias kdel='kubectl delete'
-
 # Development aliases
 alias py='python3'
 alias ipy='ipython'
 alias jl='jupyter lab'
 alias serve='python3 -m http.server'
-
 # Python3 aliases
 alias python=python3
 alias pip=pip3
-
 # Vim
 alias vim='nvim'
 alias vi='nvim'
 alias v='nvim'
-
 # System aliases
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias ~='cd ~'
 alias -- -='cd -'
-
 # Utility aliases
 alias h='history'
 alias c='clear'
 alias e='exit'
 alias reload='source ~/.zshrc'
 alias zshconfig='nvim ~/.zshrc'
-
 # Modern system monitoring
 if command -v btop &> /dev/null; then
     alias top='btop'
     alias htop='btop'
 fi
-
 alias df='df -h'
 alias du='du -h'
 alias free='free -h'
-
 # Network
 alias ping='ping -c 5'
 alias ports='netstat -tulanp'
-
 alias wl-copy="clip.exe"
 alias wl-paste="powershell.exe -command \"Get-Clipboard\""
-
 # Safety nets
 alias rm='rm -i'
 alias cp='cp -i'
@@ -371,19 +326,14 @@ alias mv='mv -i'
 # ================================
 # Load Additional Configurations
 # ================================
-
 # Load custom functions
 [ -f ~/.config/zsh/functions.zsh ] && source ~/.config/zsh/functions.zsh
-
 # Load tmux integration
 # [ -f ~/.config/zsh/tmux.zsh ] && source ~/.config/zsh/tmux.zsh
-
 # Load machine-specific configuration
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
 # Load work-specific configuration
 [ -f ~/.zshrc.work ] && source ~/.zshrc.work
-
 # WSL2 specific configuration
 if grep -q "microsoft" /proc/version 2>/dev/null; then
     # WSL2 specific aliases and functions
@@ -395,8 +345,5 @@ fi
 # ================================
 # Performance Monitoring
 # ================================
-
 # Uncomment to profile zsh startup time
 # zprof
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

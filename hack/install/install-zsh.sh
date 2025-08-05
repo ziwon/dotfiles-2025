@@ -6,13 +6,13 @@ CUR_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 echo "🚀 Installing modern Zsh setup..."
 
 # Install Zsh as default shell
-sudo apt install -y zsh
+# sudo apt install -y zsh
 chsh -s $(which zsh)
 
 # Install Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 mkdir -p "$(dirname $ZINIT_HOME)"
-git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" || true
 
 # Download Oh My Posh themes
 if [ ! -d "$HOME/.poshthemes" ]; then
@@ -28,6 +28,6 @@ ln -sf $CUR_DIR/../../config/shell/zsh/zshenv ~/.zshenv
 ln -sf $CUR_DIR/../../config/shell/zsh/zshrc ~/.zshrc
 
 # Link to Oh My Posh theme
-ln -sf $CUR_DIR/../../confg/shell/zsh/poshthemes/quick-term-python.omp.json ~/.poshthemes/quick-term-python.omp.json
+ln -sf $CUR_DIR/../../config/shell/zsh/poshthemes/quick-term-python.omp.json ~/.poshthemes/quick-term-python.omp.json
 
 echo "✅ Zsh setup complete! Please restart your terminal or run 'zsh'"

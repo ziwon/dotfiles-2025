@@ -4,7 +4,7 @@
 [user]
 	name = Aaron Yoon
 	email = yngpil.yoon@gmail.com
-	signingkey = B71B7B232316168A
+	signingkey = 1257F07C819D6AEB
 
 [core]
 	editor = nvim
