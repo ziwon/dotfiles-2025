@@ -20,15 +20,42 @@ vim.g.maplocalleader = "\\"
 
 -- Setup providers (fixed version)
 local function setup_providers()
-  -- Python provider
-  local mise_python = vim.fn.system("mise where python 2>/dev/null"):gsub("%s+", "")
-  if mise_python ~= "" and vim.fn.isdirectory(mise_python) == 1 then
-    local python_path = mise_python .. "/bin/python"
-    if vim.fn.executable(python_path) == 1 then
-      vim.g.python3_host_prog = python_path
+  -- Python provider (robust detection with mise)
+  local function find_python_host()
+    -- Try mise which (actual binary path)
+    local path = vim.fn.system("mise which python 2>/dev/null"):gsub("%s+$", "")
+    if path ~= "" and vim.fn.executable(path) == 1 then
+      return path
+    end
+    -- Fallbacks
+    path = vim.fn.system("command -v python3 2>/dev/null"):gsub("%s+$", "")
+    if path ~= "" and vim.fn.executable(path) == 1 then
+      return path
+    end
+    path = vim.fn.system("command -v python 2>/dev/null"):gsub("%s+$", "")
+    if path ~= "" and vim.fn.executable(path) == 1 then
+      return path
+    end
+    return nil
+  end
+
+  local host = find_python_host()
+  if host then
+    vim.g.python3_host_prog = host
+    -- Check for pynvim and hint if missing (non-fatal)
+    vim.fn.system({ host, "-c", "import pynvim" })
+    if vim.v.shell_error ~= 0 then
+      vim.schedule(function()
+        vim.notify(
+          "Neovim Python provider: 'pynvim' not found in " .. host .. "\n" ..
+          "Install with: pip install --user pynvim\n" ..
+          "If using mise: mise exec -- pip install -U pip pynvim",
+          vim.log.levels.WARN
+        )
+      end)
     end
   end
-  
+
   -- Disable unused providers for performance
   vim.g.loaded_ruby_provider = 0
   vim.g.loaded_perl_provider = 0
@@ -58,7 +85,7 @@ require("lazy").setup({
     -- have outdated releases, which may break your Neovim install.
     version = false, -- always use the latest git commit
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "catppuccin", "habamax" } },
   checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {

@@ -1,3 +1,4 @@
+# ================================
 # Modern Zsh Configuration (2025) 
 # ================================
 # Local BIN
@@ -380,8 +381,8 @@ alias mv='mv -i'
 alias pbcopy='xclip -selection clipboard'
 alias pbpaste='xclip -selection clipboard -o'
 
-alias docker=podman
-alias docker-compose=podman-compose
+#alias docker=podman
+#alias docker-compose=podman-compose
 
 # ================================
 # Load Additional Configurations
