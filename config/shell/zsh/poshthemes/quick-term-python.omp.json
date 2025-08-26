@@ -117,6 +117,14 @@
           "powerline_symbol": "\ue0b0",
           "template": " {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} <transparent>\ue0b1</> <p:base>\uf044 {{ .Working.String }}</>{{ end }}{{ if .Staging.Changed }} <transparent>\ue0b1</> <p:base>\uf046 {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }} <transparent>\ue0b1</> <p:base>\ueb4b {{ .StashCount }}</>{{ end }} ",
           "type": "git"
+        },
+        {
+          "type": "aws",
+          "style": "diamond",
+          "template": " \uF0EF  {{ .Profile }} ",
+          "trailing_diamond": "\uE0B0",
+          "foreground": "#1e1e2e",
+          "background": "#b4befe"
         }
       ],
       "type": "prompt"

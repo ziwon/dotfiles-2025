@@ -1,2 +1,16 @@
 export W="$HOME/WORKSPACE"
 export POSH_PICK_THEME="$HOME/.poshthemes/quick-term-python.omp.json"
+
+assume() {
+    export DEFAULT_BROWSER_PROFILE="Work"
+    export GRANTED_ALIAS_CONFIGURED="true"
+
+    # Check if any arguments contain -s or -c
+    if [[ " $* " =~ " -s " ]] || [[ " $* " =~ " -c " ]]; then
+        # When opening the browser, open the default chrome profile
+        . assume "$@" --browser-profile $DEFAULT_BROWSER_PROFILE
+    else
+        # Run assume normally
+        . assume "$@"
+    fi
+}

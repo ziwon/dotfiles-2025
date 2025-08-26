@@ -157,7 +157,7 @@ function virtualenv_prompt_info() {
 # Check if Oh My Posh theme supports Python or use fallback
 
 # Activate the brew shell before invoking oh-my-posh
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
     # Use Oh My Posh with custom theme
     eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
@@ -177,8 +177,8 @@ zinit light hlissner/zsh-autopair
 # fzf Setup (using system fzf)
 # ================================
 # Source system fzf key bindings and completion
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+# source /usr/share/fzf/key-bindings.zsh
+# source /usr/share/fzf/completion.zsh
 
 # Custom fzf configuration
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -329,11 +329,16 @@ alias di='docker images'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi $(docker images -q)'
 # Kubernetes aliases
-alias k='kubectl'
-alias kg='kubectl get'
-alias kd='kubectl describe'
-alias ka='kubectl apply'
-alias kdel='kubectl delete'
+alias k='kubecolor'
+alias kg='kubecolor get'
+alias kd='kubecolor describe'
+alias ka='kubecolor apply'
+alias kdel='kubecolor delete'
+# Terraform aliases
+alias tf='terraform'
+alias atl="atlantis"
+# AWS Profile aliases
+#alias aws-profile='export AWS_PROFILE=$(aws configure list-profiles | fzf --prompt "Choose active AWS profile:")'
 # Development aliases
 alias py='python3'
 alias ipy='ipython'
@@ -412,3 +417,14 @@ fi
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/home/aaron/.lmstudio/lisbin"
 # End of LM Studio CLI section
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/yoonyeongpil/.lmstudio/bin"
+# End of LM Studio CLI section
+
+aws-profile() {
+  export AWS_PROFILE=$(aws configure list-profiles | fzf --prompt "Choose active AWS profile:")
+  assume "$AWS_PROFILE"
+}
