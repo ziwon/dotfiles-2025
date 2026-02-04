@@ -157,7 +157,6 @@ function virtualenv_prompt_info() {
 # Check if Oh My Posh theme supports Python or use fallback
 
 # Activate the brew shell before invoking oh-my-posh
-eval "$(/opt/homebrew/bin/brew shellenv)"
 if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
     # Use Oh My Posh with custom theme
     eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
@@ -428,3 +427,17 @@ aws-profile() {
   export AWS_PROFILE=$(aws configure list-profiles | fzf --prompt "Choose active AWS profile:")
   assume "$AWS_PROFILE"
 }
+
+eval "$(direnv hook zsh)"
+
+# opencode
+export PATH=/home/aaron/.opencode/bin:$PATH
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc'; fi
+
+# OpenClaw Completion
+source <(openclaw completion --shell zsh)

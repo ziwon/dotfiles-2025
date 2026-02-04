@@ -86,7 +86,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
   },
   install = { colorscheme = { "catppuccin", "habamax" } },
-  checker = { enabled = true }, -- automatically check for plugin updates
+  checker = { enabled = false }, -- disabled due to mason-lspconfig early loading errors
   performance = {
     rtp = {
       -- disable some rtp plugins

@@ -43,4 +43,4 @@
 # resize-overlay-duration = 4s 200ms
 font-family = "FiraCode Nerd Font"
 window-decoration = true
-background-opacity = 0.95
+background-opacity = 1.0
