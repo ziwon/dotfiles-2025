@@ -2,7 +2,7 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
 default: install
 
-install: install-git install-nvim install-tmux install-zsh install-configs
+install: install-git install-nvim install-tmux install-zsh install-configs install-claude
 
 bootstrap: install-just
 
@@ -28,6 +28,9 @@ install-zsh:
 
 install-tmux:
   if [[ -n "${SUDO_USER:-}" ]]; then sudo -u "$SUDO_USER" ./hack/install/install-tmux.sh; else ./hack/install/install-tmux.sh; fi
+
+install-claude:
+  if [[ -n "${SUDO_USER:-}" ]]; then sudo -u "$SUDO_USER" ./hack/install/install-claude.sh; else ./hack/install/install-claude.sh; fi
 
 install-configs: install-bat install-btop install-eza install-ghostty install-mise
 
