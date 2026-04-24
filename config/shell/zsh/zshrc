@@ -175,9 +175,8 @@ zinit light hlissner/zsh-autopair
 # ================================
 # fzf Setup (using system fzf)
 # ================================
-# Source system fzf key bindings and completion
-# source /usr/share/fzf/key-bindings.zsh
-# source /usr/share/fzf/completion.zsh
+# Source fzf key bindings and completion
+source <(fzf --zsh)
 
 # Custom fzf configuration
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -267,7 +266,11 @@ export PAGER="less"
 export LESS="-R"
 # Colors
 export CLICOLOR=1
-export LS_COLORS="$(vivid generate catppuccin-mocha 2>/dev/null || dircolors -b)"
+if command -v vivid >/dev/null 2>&1; then
+  export LS_COLORS="$(vivid generate catppuccin-mocha 2>/dev/null)"
+elif command -v dircolors >/dev/null 2>&1; then
+  export LS_COLORS="$(dircolors -b)"
+fi
 export POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Language
 export LANG="en_US.UTF-8"
@@ -417,7 +420,6 @@ fi
 export PATH="$PATH:/home/aaron/.lmstudio/lisbin"
 # End of LM Studio CLI section
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/yoonyeongpil/.lmstudio/bin"
@@ -439,5 +441,3 @@ if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc' ]; th
 # The next line enables shell command completion for gcloud.
 if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc'; fi
 
-# OpenClaw Completion
-source <(openclaw completion --shell zsh)
