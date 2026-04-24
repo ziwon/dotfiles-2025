@@ -9,10 +9,14 @@ echo "🚀 Installing modern Zsh setup..."
 # sudo apt install -y zsh
 chsh -s $(which zsh)
 
-# Install Zinit
+# Install Zinit (idempotent)
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-mkdir -p "$(dirname $ZINIT_HOME)"
-git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" || true
+mkdir -p "$(dirname "$ZINIT_HOME")"
+if [ -d "$ZINIT_HOME/.git" ]; then
+  git -C "$ZINIT_HOME" pull --ff-only || true
+else
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" || true
+fi
 
 # Download Oh My Posh themes
 if [ ! -d "$HOME/.poshthemes" ]; then
