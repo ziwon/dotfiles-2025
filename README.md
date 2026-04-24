@@ -32,6 +32,7 @@ cd dotfiles-2025
 
 # Or install individual components
 ./hack/install/install-git.sh      # Git configuration
+./hack/install/install-tmux.sh     # tmux configuration
 ```
 
 ### **Manual Symlinking**
@@ -45,6 +46,9 @@ ln -sf ~/dotfiles-2025/config/shell/zsh/zshrc ~/.zshrc
 
 # Neovim configuration
 ln -sf ~/dotfiles-2025/config/nvim ~/.config/nvim
+
+# tmux configuration
+ln -sf ~/dotfiles-2025/config/tmux/tmux.conf ~/.tmux.conf
 ```
 
 ## 📁 Structure
