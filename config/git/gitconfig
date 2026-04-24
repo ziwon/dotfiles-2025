@@ -319,6 +319,8 @@
 	unstage = reset HEAD --
 	who = shortlog -sne
 	work = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+  pr  = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
+  pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
 
 	# Cleanup commands
 	cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
