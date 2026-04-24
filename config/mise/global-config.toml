@@ -5,7 +5,7 @@ experimental = true
 
 [tools]
 python = "3.12"
-node = "22"
+node = "latest"
 go = "latest"
 terraform = "latest"
 kubectl = "latest"
@@ -13,6 +13,9 @@ helm = "latest"
 docker-compose = "latest"
 lazygit = "latest"
 uv = "latest"
+bat = "latest"
+eza = "latest"
+just = "latest"
 
 [env]
 # Development environment variables
