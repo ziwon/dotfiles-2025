@@ -64,6 +64,36 @@ install_ubuntu_neovim() {
   info "Installed $(nvim --version | head -n1)"
 }
 
+install_ubuntu_mise() {
+  if command -v mise >/dev/null 2>&1; then
+    info "mise already installed: $(mise --version)"
+    return 0
+  fi
+
+  info "Installing mise from the official apt repository..."
+  sudo install -dm 755 /etc/apt/keyrings
+  curl -fsS https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.asc >/dev/null
+  echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.asc] https://mise.jdx.dev/deb stable main" \
+    | sudo tee /etc/apt/sources.list.d/mise.list >/dev/null
+  sudo apt-get update
+  sudo apt-get install -y mise
+}
+
+install_mise_tool() {
+  local tool="$1"
+  local binary="${2:-$1}"
+
+  if command -v "$binary" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if command -v mise >/dev/null 2>&1; then
+    mise install "$tool@latest" || warn "Could not install $tool with mise"
+  else
+    warn "mise is not available; skipped $tool"
+  fi
+}
+
 install_ubuntu_tools() {
   command -v apt-get >/dev/null 2>&1 || die "apt-get not found; Ubuntu 24.04 is expected."
 
@@ -73,23 +103,29 @@ install_ubuntu_tools() {
     ca-certificates
     curl
     direnv
+    eza
     fd-find
     fzf
+    glab
     gh
     git
     git-delta
     gnupg
+    just
     jq
     ripgrep
     tmux
     unzip
+    vivid
     xclip
+    zoxide
     zsh
   )
 
   info "Installing Ubuntu packages..."
   sudo apt-get update
   sudo apt-get install -y "${required[@]}"
+  install_ubuntu_mise
 
   mkdir -p "$HOME/.local/bin"
   export PATH="$HOME/.local/bin:$PATH"
@@ -100,11 +136,7 @@ install_ubuntu_tools() {
     ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
   fi
 
-  for optional in eza zoxide glab; do
-    if ! command -v "$optional" >/dev/null 2>&1; then
-      sudo apt-get install -y "$optional" || warn "Optional package not available via apt: $optional"
-    fi
-  done
+  install_mise_tool oh-my-posh
 
   install_ubuntu_neovim
 }

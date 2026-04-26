@@ -117,7 +117,7 @@ dotfiles-2025/
 ## Platform Notes
 
 - macOS uses Homebrew and `Brewfile` for tool installation.
-- Ubuntu 24.04 uses `apt-get` for the baseline toolchain and installs Neovim 0.10+ from the official Neovim release tarball.
+- Ubuntu 24.04 uses `apt-get` plus the official mise apt repository for the baseline toolchain, and installs Neovim 0.10+ from the official Neovim release tarball.
 - Wayland-specific setup is intentionally not part of the default install.
 
 ## 🧰 Maintenance

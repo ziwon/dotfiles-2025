@@ -16,6 +16,9 @@ uv = "latest"
 bat = "latest"
 eza = "latest"
 just = "latest"
+oh-my-posh = "latest"
+zoxide = "latest"
+vivid = "latest"
 
 [env]
 # Development environment variables
@@ -23,4 +26,3 @@ EDITOR = "nvim"
 VISUAL = "nvim"
 PYTHON_CONFIGURE_OPTS = "--enable-shared"
 NODE_OPTIONS = "--max-old-space-size=4096"
-

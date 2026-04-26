@@ -26,3 +26,6 @@ See [full-install.sh](../hack/install/full-install.sh) for complete setup.
 
 ## Neovim
 Ubuntu 24.04 may provide an older Neovim through `apt`. The installer uses the official Neovim release tarball and links it at `~/.local/bin/nvim` so LazyVim has Neovim 0.10+.
+
+## Toolchain
+On Ubuntu 24.04, the installer uses `apt-get` for distro packages and adds the official mise apt repository when `mise` is missing. Tools that are better managed outside apt can then be installed through mise.
