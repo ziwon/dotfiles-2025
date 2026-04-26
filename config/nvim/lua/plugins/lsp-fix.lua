@@ -1,6 +1,4 @@
--- Fix mason-lspconfig early loading issue
--- Ensure mason-lspconfig loads before nvim-lspconfig
--- Note: mason plugins were renamed from williamboman/* to mason-org/*
+-- Keep Mason loaded before mason-lspconfig and nvim-lspconfig.
 return {
   {
     "mason-org/mason.nvim",
@@ -8,10 +6,10 @@ return {
   },
   {
     "mason-org/mason-lspconfig.nvim",
-    dependencies = { "mason.nvim" },
+    dependencies = { "mason-org/mason.nvim" },
   },
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "mason-lspconfig.nvim" },
+    dependencies = { "mason-org/mason-lspconfig.nvim" },
   },
 }

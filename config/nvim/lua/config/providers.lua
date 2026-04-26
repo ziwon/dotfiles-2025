@@ -2,6 +2,12 @@
 local M = {}
 
 function M.setup()
+  -- Disable unused providers for performance. Enable them in a local override
+  -- only if a plugin explicitly needs them.
+  vim.g.loaded_ruby_provider = 0
+  vim.g.loaded_perl_provider = 0
+  vim.g.loaded_node_provider = 0
+
   -- Python provider setup with UV and mise integration
   local function setup_python_provider()
     -- First check for UV virtual environment in current directory or parent directories
@@ -51,7 +57,10 @@ function M.setup()
     end
     
     -- Fallback to system Python with pynvim
-    local system_python = vim.fn.exepath("python3") or vim.fn.exepath("python")
+    local system_python = vim.fn.exepath("python3")
+    if system_python == "" then
+      system_python = vim.fn.exepath("python")
+    end
     if system_python ~= "" then
       -- Check if pynvim is available
       local check_pynvim = vim.fn.system(system_python .. " -c 'import pynvim; print(pynvim.__version__)' 2>/dev/null")
@@ -70,16 +79,6 @@ function M.setup()
     vim.g.loaded_python3_provider = nil  -- Remove any disable flag
   else
     vim.notify("Python provider setup failed. Install pynvim: pip install pynvim", vim.log.levels.WARN)
-  end
-
-  -- Node provider setup (keep disabled unless needed)
-  local mise_node_cmd = "mise where node 2>/dev/null || echo ''"
-  local mise_node_path = vim.fn.system(mise_node_cmd):gsub("%s+", "")
-  if mise_node_path ~= "" and vim.fn.isdirectory(mise_node_path) == 1 then
-    local node_bin = mise_node_path .. "/bin/node"
-    if vim.fn.executable(node_bin) == 1 then
-      vim.g.node_host_prog = node_bin
-    end
   end
 
   -- Clipboard setup for WSL2

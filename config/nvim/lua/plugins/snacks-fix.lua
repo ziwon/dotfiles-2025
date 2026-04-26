@@ -1,11 +1,10 @@
--- Disable snacks explorer due to Neovim 0.9.5 API compatibility issues
--- The nvim_get_hl 'create' parameter requires Neovim 0.10+
+-- Neovim 0.10+ is required by the bootstrap scripts, so Snacks explorer can stay enabled.
 return {
 	{
 		"folke/snacks.nvim",
 		opts = {
 			explorer = {
-				enabled = true, -- Disable until Neovim is upgraded to 0.10+
+				enabled = true,
 			},
 		},
 	},
