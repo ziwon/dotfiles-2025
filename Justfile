@@ -75,6 +75,3 @@ install-tools-ubuntu:
 
 install-sysctl:
   if [[ "$(uname)" == "Linux" ]]; then sudo cp {{justfile_directory()}}/config/sysctl.d/99-network-performance.conf /etc/sysctl.d/99-network-performance.conf; sudo sysctl --system; else echo "install-sysctl is Linux-only"; fi
-
-install-systemd:
-  if [[ "$(uname)" == "Linux" ]]; then mkdir -p ~/.config/systemd/user; ln -sf {{justfile_directory()}}/config/systemd/symlink-wayland-socket.service ~/.config/systemd/user/symlink-wayland-socket.service; systemctl --user daemon-reload; systemctl --user enable --now symlink-wayland-socket.service; else echo "install-systemd is Linux-only"; fi

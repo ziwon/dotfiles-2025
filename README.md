@@ -17,7 +17,7 @@ A comprehensive, performance-optimized dotfiles setup featuring modern tools and
 - **Languages**: Python, JavaScript/TypeScript, Go, Rust, Kotlin, Terraform, Docker
 - **Modern CLI**: eza, bat, rg, fd, zoxide, fzf integration
 - **Productivity**: Extensive aliases, functions, and key bindings
-- **WSL2**: Optimized for Windows Subsystem for Linux
+- **Linux desktop**: Optimized for Ubuntu 24.04 on X11; Wayland helpers are legacy-only
 
 ## 🚀 Quick Start
 
@@ -118,7 +118,7 @@ dotfiles-2025/
 
 - macOS uses Homebrew and `Brewfile` for tool installation.
 - Ubuntu 24.04 uses `apt-get` plus the official mise apt repository for the baseline toolchain, and installs Neovim 0.10+ from the official Neovim release tarball.
-- Wayland-specific setup is intentionally not part of the default install.
+- Wayland-specific WSLg helpers live under `legacy/wsl-wayland/` and are not part of the supported default install.
 
 ## 🧰 Maintenance
 

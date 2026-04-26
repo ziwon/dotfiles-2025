@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# Install and enable symlink-wayland-socket.service
+# Legacy WSLg/Wayland helper. This is not part of the supported default setup.
 
 set -e
 
 SERVICE_FILE="symlink-wayland-socket.service"
-SERVICE_PATH="../../config/systemd/$SERVICE_FILE"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SERVICE_PATH="$SCRIPT_DIR/$SERVICE_FILE"
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 
 # Create systemd user directory if it doesn't exist
