@@ -8,13 +8,20 @@ export PATH="$HOME/.local/bin:$PATH"
 # zmodload zsh/zprof
 # Zinit installation and setup
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-source "${ZINIT_HOME}/zinit.zsh"
-# Load annexes
-zinit light-mode for \
-    zdharma-continuum/zinit-annex-as-monitor \
-    zdharma-continuum/zinit-annex-bin-gem-node \
-    zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
+if [[ ! -f "${ZINIT_HOME}/zinit.zsh" ]]; then
+    ZINIT_HOME="${HOME}/.local/share/zinit/zinit.git"
+fi
+if [[ -f "${ZINIT_HOME}/zinit.zsh" ]]; then
+    source "${ZINIT_HOME}/zinit.zsh"
+fi
+if (( ${+functions[zinit]} )); then
+    # Load annexes
+    zinit light-mode for \
+        zdharma-continuum/zinit-annex-as-monitor \
+        zdharma-continuum/zinit-annex-bin-gem-node \
+        zdharma-continuum/zinit-annex-patch-dl \
+        zdharma-continuum/zinit-annex-rust
+fi
 
 # ================================
 # COMPLETION SYSTEM INITIALIZATION 
@@ -165,12 +172,14 @@ fi
 # ================================
 # Core Plugins (LOADED AFTER COMPLETION INIT)
 # ================================
-# Completions
-zinit light zsh-users/zsh-completions
-# History substring search
-zinit light zsh-users/zsh-history-substring-search
-# Auto-close quotes and brackets
-zinit light hlissner/zsh-autopair
+if (( ${+functions[zinit]} )); then
+    # Completions
+    zinit light zsh-users/zsh-completions
+    # History substring search
+    zinit light zsh-users/zsh-history-substring-search
+    # Auto-close quotes and brackets
+    zinit light hlissner/zsh-autopair
+fi
 
 # ================================
 # fzf Setup (using system fzf)
@@ -192,36 +201,45 @@ export FZF_DEFAULT_OPTS="
 # ================================
 # Syntax Highlighting (LOADED AFTER fzf)
 # ================================
-# Syntax highlighting (must be loaded after fzf and autosuggestions)
-zinit light zdharma-continuum/fast-syntax-highlighting
-# Autosuggestions (load after syntax highlighting)
-zinit light zsh-users/zsh-autosuggestions
+if (( ${+functions[zinit]} )); then
+    # Syntax highlighting (must be loaded after fzf and autosuggestions)
+    zinit light zdharma-continuum/fast-syntax-highlighting
+    # Autosuggestions (load after syntax highlighting)
+    zinit light zsh-users/zsh-autosuggestions
+fi
 
 # ================================
 # Productivity Plugins (LOADED LAST)
 # ================================
-# Directory jumping
-zinit light agkozak/zsh-z
-# Git aliases and functions
-zinit light unixorn/git-extra-commands
-# Better cd command
-# zinit light b4b4r07/enhancd
-# Command line fuzzy finder integration (load after fzf setup)
-zinit light Aloxaf/fzf-tab
+if (( ${+functions[zinit]} )); then
+    # Directory jumping
+    zinit light agkozak/zsh-z
+    # Git aliases and functions
+    zinit light unixorn/git-extra-commands
+    # Better cd command
+    # zinit light b4b4r07/enhancd
+    # Command line fuzzy finder integration (load after fzf setup)
+    zinit light Aloxaf/fzf-tab
 
-# Colored man pages
-zinit light ael-code/zsh-colored-man-pages
-# Docker completion and helpers
-# zinit light docker/cli contrib/completion/zsh
-# Kubernetes helpers
-zinit light bonnefoa/kubectl-fzf
-# Python virtual environment management
-zinit light MichaelAquilina/zsh-autoswitch-virtualenv
+    # Colored man pages
+    zinit light ael-code/zsh-colored-man-pages
+    # Docker completion and helpers
+    # zinit light docker/cli contrib/completion/zsh
+    # Kubernetes helpers
+    zinit light bonnefoa/kubectl-fzf
+    # Python virtual environment management
+    zinit light MichaelAquilina/zsh-autoswitch-virtualenv
+fi
 
 # ================================
 # Development Tools Integration
 # ================================
 # mise (tool version management)
+export MISE_DATA_DIR=/data/mise
+export MISE_INSTALLS_DIR=/data/mise/installs
+export MISE_DOWNLOADS_DIR=/data/mise/downloads
+export MISE_CACHE_DIR=/data/mise-cache
+export MISE_STATE_DIR=/data/mise-state
 if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
 fi
@@ -430,7 +448,9 @@ aws-profile() {
   assume "$AWS_PROFILE"
 }
 
-eval "$(direnv hook zsh)"
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
 
 # opencode
 export PATH=/home/aaron/.opencode/bin:$PATH
@@ -441,3 +461,5 @@ if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc' ]; th
 # The next line enables shell command completion for gcloud.
 if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc'; fi
 
+# OpenFang
+export PATH=/home/aaron/.openfang/bin:$PATH
