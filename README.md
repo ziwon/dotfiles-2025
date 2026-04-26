@@ -145,6 +145,10 @@ just doctor
 - `~/.zshrc.work` - Work-specific zsh settings
 - `~/.config/zsh/local.example.zsh` - Example snippets for machine-specific zsh settings
 
+Git identity is intentionally not tracked in the shared `gitconfig`. Start from
+`config/git/gitconfig.local.example` and save your machine-specific identity as
+`~/.gitconfig.local`.
+
 ### **Theme Customization**
 - oh-my-posh themes: `~/Workspace/oh-my-posh/themes/`
 - Neovim colorscheme: LazyVim extras

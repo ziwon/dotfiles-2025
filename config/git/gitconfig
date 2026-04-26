@@ -1,10 +1,6 @@
 # Modern Git Configuration (2025)
-# Optimized for performance, security, and developer experience
-
-[user]
-	name = Aaron Yoon
-	email = yngpil.yoon@gmail.com
-	signingkey = 1257F07C819D6AEB
+# Optimized for performance, security, and developer experience.
+# Put identity and machine-specific settings in ~/.gitconfig.local.
 
 [core]
 	editor = nvim
@@ -161,15 +157,12 @@
 	updateRefs = true
 
 [commit]
-	gpgsign = true
 	# Show diff in commit message editor
 	verbose = true
 	# Clean up commit messages
 	cleanup = scissors
 
 [tag]
-	# Sign tags by default
-	gpgsign = true
 	# Sort tags by version
 	sort = version:refname
 
@@ -253,7 +246,6 @@
 	helper = cache --timeout=28800
 
 [credential "https://github.com"]
-	username = ziwon
 	# Use GitHub CLI for authentication
 	helper = !/usr/bin/env gh auth git-credential
 
@@ -312,7 +304,7 @@
 	recent = branch --sort=-committerdate
 	remotes = remote -v
 	staged = diff --cached
-	today = log --since='1 day ago' --oneline --author='Youngpil Yoon'
+		today = log --since='1 day ago' --oneline
 	tree = log --graph --pretty=oneline --abbrev-commit
 	undo = reset HEAD~1 --mixed
 	unmerged = diff --name-only --diff-filter=U

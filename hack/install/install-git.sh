@@ -99,6 +99,11 @@ install_git_config() {
         "$GIT_CONFIG_DIR/gitexclude" \
         "$HOME/.gitexclude" \
         "Git global ignore"
+
+    if [[ -f "$GIT_CONFIG_DIR/gitconfig.local.example" && ! -e "$HOME/.gitconfig.local" ]]; then
+        cp "$GIT_CONFIG_DIR/gitconfig.local.example" "$HOME/.gitconfig.local.example"
+        print_warning "Git identity is machine-local. Edit ~/.gitconfig.local or start from ~/.gitconfig.local.example"
+    fi
 }
 
 # Function to verify git installation
@@ -246,9 +251,8 @@ main() {
     
     print_success "Git configuration installation completed!"
     print_status "You may want to customize the following:"
-    print_status "  - User name and email in ~/.gitconfig"
-    print_status "  - GPG signing key"
-    print_status "  - Work-specific configurations"
+    print_status "  - User name, email, and signing key in ~/.gitconfig.local"
+    print_status "  - Work-specific configuration in ~/.gitconfig.work"
 }
 
 # Run main function with all arguments

@@ -1,0 +1,14 @@
+# Machine-local Git identity.
+# Copy to ~/.gitconfig.local and edit for each machine/account.
+
+[user]
+	name = Your Name
+	email = you@example.com
+	# signingkey = YOUR_GPG_KEY_ID
+
+# Enable after your signing key is configured.
+# [commit]
+# 	gpgsign = true
+#
+# [tag]
+# 	gpgsign = true

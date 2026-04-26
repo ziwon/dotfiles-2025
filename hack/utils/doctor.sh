@@ -67,6 +67,30 @@ check_link() {
   fi
 }
 
+check_git_identity() {
+  local name email
+  name="$(git config --global user.name 2>/dev/null || true)"
+  email="$(git config --global user.email 2>/dev/null || true)"
+
+  if [[ -n "$name" ]]; then
+    ok "git user.name: $name"
+  else
+    fail "git user.name is not configured"
+  fi
+
+  if [[ -n "$email" ]]; then
+    ok "git user.email: $email"
+  else
+    fail "git user.email is not configured"
+  fi
+
+  if [[ -f "$HOME/.gitconfig.local" ]]; then
+    ok "$HOME/.gitconfig.local exists"
+  else
+    warn "$HOME/.gitconfig.local is missing; copy from ~/.gitconfig.local.example"
+  fi
+}
+
 main() {
   info "OS: $(uname -s) $(uname -m)"
   info "Shell: ${SHELL:-unknown}"
@@ -107,6 +131,9 @@ main() {
   check_link "$HOME/.tmux.conf" "config/tmux/tmux.conf"
   check_link "$HOME/.gitconfig" "config/git/gitconfig"
   check_link "$HOME/.config/nvim" "config/nvim"
+
+  printf '\nGit identity\n'
+  check_git_identity
 
   printf '\nSummary\n'
   if (( failures > 0 )); then
