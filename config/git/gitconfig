@@ -255,10 +255,10 @@
 [credential "https://github.com"]
 	username = ziwon
 	# Use GitHub CLI for authentication
-	helper = !/usr/bin/gh auth git-credential
+	helper = !/usr/bin/env gh auth git-credential
 
 [credential "https://gitlab.com"]
-	helper = !/usr/bin/glab auth git-credential
+	helper = !/usr/bin/env glab auth git-credential
 
 # Git LFS configuration
 [filter "lfs"]

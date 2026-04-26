@@ -1,19 +1,28 @@
 # Installation Guide
 
 ## Prerequisites
-- Ubuntu 24.04 or compatible Linux distribution
+- macOS with Homebrew, or Ubuntu 24.04
 - Internet connection
 - Git installed
 
 ## Quick Install
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ziwon/dotfiles-2025/main/scripts/install/quick-install.sh | bash
+git clone https://github.com/ziwon/dotfiles-2025.git
+cd dotfiles-2025
+./hack/install/full-install.sh
 ```
 
 ## Manual Installation
+```bash
+just install
+```
+
 See [full-install.sh](../hack/install/full-install.sh) for complete setup.
 
 ## Post-Installation
 1. Restart terminal
 2. Run health checks: `nvim +checkhealth`
-3. Install tmux plugins: `tmux source ~/.tmux.conf`
+3. Install tmux plugins inside tmux: prefix + `I`
+
+## Neovim
+Ubuntu 24.04 may provide an older Neovim through `apt`. The installer uses the official Neovim release tarball and links it at `~/.local/bin/nvim` so LazyVim has Neovim 0.10+.

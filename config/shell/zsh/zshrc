@@ -4,6 +4,17 @@
 # Local BIN
 export PATH="$HOME/.local/bin:$PATH"
 
+# Homebrew paths for macOS. This keeps the same zshrc usable on Apple Silicon
+# and Intel Macs without hardcoding one prefix.
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        if [[ -x "$brew_bin" ]]; then
+            eval "$("$brew_bin" shellenv)"
+            break
+        fi
+    done
+fi
+
 # Performance monitoring (optional - remove in production)
 # zmodload zsh/zprof
 # Zinit installation and setup
@@ -82,7 +93,7 @@ setopt NO_BEEP
 # ================================
 # Completion Styling 
 # ================================
-FPATH="$HOME/.docker/completions:$FPATH"
+FPATH="$HOME/.config/zsh/completions:$HOME/.docker/completions:$FPATH"
 
 # Use the guarded preview for cd
 zstyle ':fzf-tab:complete:*:*' fzf-preview '
@@ -164,7 +175,7 @@ function virtualenv_prompt_info() {
 # Check if Oh My Posh theme supports Python or use fallback
 
 # Activate the brew shell before invoking oh-my-posh
-if [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
+if command -v oh-my-posh >/dev/null 2>&1 && [[ -n "$POSH_PICK_THEME" ]] && [[ -f "$POSH_PICK_THEME" ]]; then
     # Use Oh My Posh with custom theme
     eval "$(oh-my-posh init zsh --config "$POSH_PICK_THEME")"
 fi
@@ -184,8 +195,10 @@ fi
 # ================================
 # fzf Setup (using system fzf)
 # ================================
-# Source fzf key bindings and completion
-source <(fzf --zsh)
+# Source fzf key bindings and completion when the installed fzf supports it.
+if command -v fzf >/dev/null 2>&1 && fzf --zsh >/dev/null 2>&1; then
+    source <(fzf --zsh)
+fi
 
 # Custom fzf configuration
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -235,11 +248,13 @@ fi
 # Development Tools Integration
 # ================================
 # mise (tool version management)
-export MISE_DATA_DIR=/data/mise
-export MISE_INSTALLS_DIR=/data/mise/installs
-export MISE_DOWNLOADS_DIR=/data/mise/downloads
-export MISE_CACHE_DIR=/data/mise-cache
-export MISE_STATE_DIR=/data/mise-state
+if [[ -d /data && -w /data ]]; then
+    export MISE_DATA_DIR=/data/mise
+    export MISE_INSTALLS_DIR=/data/mise/installs
+    export MISE_DOWNLOADS_DIR=/data/mise/downloads
+    export MISE_CACHE_DIR=/data/mise-cache
+    export MISE_STATE_DIR=/data/mise-state
+fi
 if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
 fi
@@ -258,10 +273,12 @@ fi
 # Emacs-style key bindings
 bindkey -e
 # History search
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+if [[ -n "${widgets[history-substring-search-up]}" && -n "${widgets[history-substring-search-down]}" ]]; then
+    bindkey '^P' history-substring-search-up
+    bindkey '^N' history-substring-search-down
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+fi
 # fzf key bindings (only if widgets exist)
 if [[ -n "${widgets[fzf-history-widget]}" ]]; then
     bindkey '^R' fzf-history-widget
@@ -299,7 +316,7 @@ export PYTHONUNBUFFERED=1
 export NODE_OPTIONS="--max-old-space-size=4096"
 # Cuda
 export PATH=/usr/local/cuda/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
 # ETC
 export GPG_TTY=$(tty)  
 export GPG_AGENT_INFO=""
@@ -349,11 +366,19 @@ alias di='docker images'
 alias drm='docker rm $(docker ps -aq)'
 alias drmi='docker rmi $(docker images -q)'
 # Kubernetes aliases
-alias k='kubecolor'
-alias kg='kubecolor get'
-alias kd='kubecolor describe'
-alias ka='kubecolor apply'
-alias kdel='kubecolor delete'
+if command -v kubecolor &> /dev/null; then
+    alias k='kubecolor'
+    alias kg='kubecolor get'
+    alias kd='kubecolor describe'
+    alias ka='kubecolor apply'
+    alias kdel='kubecolor delete'
+else
+    alias k='kubectl'
+    alias kg='kubectl get'
+    alias kd='kubectl describe'
+    alias ka='kubectl apply'
+    alias kdel='kubectl delete'
+fi
 # Terraform aliases
 alias tf='terraform'
 alias atl="atlantis"
@@ -391,20 +416,33 @@ if command -v btop &> /dev/null; then
 fi
 alias df='df -h'
 alias du='du -h'
-alias free='free -h'
+if command -v free &> /dev/null; then
+    alias free='free -h'
+fi
 # Network
 alias ping='ping -c 5'
-alias ports='netstat -tulanp'
-alias wl-copy="clip.exe"
-alias wl-paste="powershell.exe -command \"Get-Clipboard\""
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    alias ports='lsof -nP -iTCP -sTCP:LISTEN'
+else
+    alias ports='netstat -tulanp'
+fi
 # Safety nets
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 
-# copy lilke macos
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
+# Clipboard helpers
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # macOS provides pbcopy/pbpaste.
+elif grep -q "microsoft" /proc/version 2>/dev/null; then
+    alias wl-copy="clip.exe"
+    alias wl-paste="powershell.exe -command \"Get-Clipboard\""
+    alias pbcopy='clip.exe'
+    alias pbpaste='powershell.exe -command "Get-Clipboard" | head -n -1'
+elif command -v xclip &> /dev/null; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+fi
 
 #alias docker=podman
 #alias docker-compose=podman-compose
@@ -424,8 +462,6 @@ alias pbpaste='xclip -selection clipboard -o'
 if grep -q "microsoft" /proc/version 2>/dev/null; then
     # WSL2 specific aliases and functions
     alias open='explorer.exe'
-    alias pbcopy='clip.exe'
-    alias pbpaste='powershell.exe -command "Get-Clipboard" | head -n -1'
 fi
 
 # ================================
@@ -435,12 +471,16 @@ fi
 # zprof
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/home/aaron/.lmstudio/lisbin"
+if [[ -d "$HOME/.lmstudio/lisbin" ]]; then
+    export PATH="$PATH:$HOME/.lmstudio/lisbin"
+fi
 # End of LM Studio CLI section
 
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/yoonyeongpil/.lmstudio/bin"
+if [[ -d "$HOME/.lmstudio/bin" ]]; then
+    export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
 # End of LM Studio CLI section
 
 aws-profile() {
@@ -453,13 +493,17 @@ if command -v direnv &> /dev/null; then
 fi
 
 # opencode
-export PATH=/home/aaron/.opencode/bin:$PATH
+if [[ -d "$HOME/.opencode/bin" ]]; then
+    export PATH="$HOME/.opencode/bin:$PATH"
+fi
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/cache/Workspace/ziwon/homelab/tmp/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 # OpenFang
-export PATH=/home/aaron/.openfang/bin:$PATH
+if [[ -d "$HOME/.openfang/bin" ]]; then
+    export PATH="$HOME/.openfang/bin:$PATH"
+fi

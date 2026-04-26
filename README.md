@@ -27,8 +27,11 @@ A comprehensive, performance-optimized dotfiles setup featuring modern tools and
 git clone https://github.com/ziwon/dotfiles-2025.git
 cd dotfiles-2025
 
-# Install everything
+# Install everything on macOS or Ubuntu 24.04
 ./hack/install/full-install.sh
+
+# If your base tools are already installed, you can use just directly
+just install
 
 # Or install individual components
 ./hack/install/install-git.sh      # Git configuration
@@ -96,7 +99,7 @@ dotfiles-2025/
 ## 🛠️ Requirements
 
 - **Git** 2.20+
-- **Neovim** 0.9+
+- **Neovim** 0.10+ recommended
 - **Zsh** 5.0+
 - **Node.js** (for LSP servers)
 - **Python 3.8+** (for LSP servers)
@@ -110,6 +113,12 @@ dotfiles-2025/
 - **fd** (modern find replacement)
 - **zoxide** (smarter cd)
 - **mise** (tool version management)
+
+## Platform Notes
+
+- macOS uses Homebrew and `Brewfile` for tool installation.
+- Ubuntu 24.04 uses `apt-get` for the baseline toolchain and installs Neovim 0.10+ from the official Neovim release tarball.
+- Wayland-specific setup is intentionally not part of the default install.
 
 ## 🧰 Maintenance
 

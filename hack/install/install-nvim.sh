@@ -77,19 +77,73 @@ create_symlink() {
 }
 
 # Function to install Neovim
+neovim_meets_minimum() {
+    command -v nvim >/dev/null 2>&1 || return 1
+
+    local parsed
+    local major
+    local minor
+    parsed="$(nvim --version | sed -n '1s/.* v\{0,1\}\([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1 \2/p')"
+    [[ -n "$parsed" ]] || return 1
+
+    read -r major minor <<<"$parsed"
+    (( major > 0 || minor >= 10 ))
+}
+
+install_neovim_release_on_ubuntu() {
+    local asset
+    case "$(uname -m)" in
+        x86_64|amd64)
+            asset="nvim-linux-x86_64.tar.gz"
+            ;;
+        aarch64|arm64)
+            asset="nvim-linux-arm64.tar.gz"
+            ;;
+        *)
+            print_error "Unsupported architecture for Neovim release tarball: $(uname -m)"
+            return 1
+            ;;
+    esac
+
+    mkdir -p "$HOME/.local/bin" "$HOME/.local/opt"
+    export PATH="$HOME/.local/bin:$PATH"
+
+    local tmp_dir
+    local archive
+    tmp_dir="$(mktemp -d)"
+    archive="$tmp_dir/$asset"
+
+    print_status "Installing Neovim 0.10+ from official release tarball..."
+    curl -fL "https://github.com/neovim/neovim/releases/latest/download/$asset" -o "$archive"
+    rm -rf "$HOME/.local/opt/nvim" "$HOME/.local/opt/nvim-linux-x86_64" "$HOME/.local/opt/nvim-linux-arm64"
+    tar -xzf "$archive" -C "$HOME/.local/opt"
+
+    local extracted
+    extracted="$(find "$HOME/.local/opt" -maxdepth 1 -type d -name 'nvim-linux-*' | head -n1)"
+    if [[ -z "$extracted" ]]; then
+        print_error "Could not find extracted Neovim directory."
+        rm -rf "$tmp_dir"
+        return 1
+    fi
+
+    mv "$extracted" "$HOME/.local/opt/nvim"
+    ln -sf "$HOME/.local/opt/nvim/bin/nvim" "$HOME/.local/bin/nvim"
+    rm -rf "$tmp_dir"
+}
+
 install_neovim() {
     print_status "Checking Neovim installation..."
     
-    if command -v nvim &> /dev/null; then
+    if neovim_meets_minimum; then
         local nvim_version
         nvim_version="$(nvim --version | head -n1)"
-        print_success "Neovim already installed: $nvim_version"
+        print_success "Neovim already satisfies the required version: $nvim_version"
     else
         print_status "Installing Neovim..."
         
         # Try different package managers
-        if command -v apt &> /dev/null; then
-            sudo apt update && sudo apt install -y neovim
+        if [[ "$(uname -s)" == "Linux" ]] && [[ -r /etc/os-release ]] && grep -qi '^ID=ubuntu' /etc/os-release; then
+            install_neovim_release_on_ubuntu
         elif command -v yum &> /dev/null; then
             sudo yum install -y neovim
         elif command -v pacman &> /dev/null; then
@@ -101,6 +155,10 @@ install_neovim() {
             return 1
         fi
         
+        if ! neovim_meets_minimum; then
+            print_error "Neovim 0.10+ is required. Installed version: $(nvim --version 2>/dev/null | head -n1 || echo 'not found')"
+            return 1
+        fi
         print_success "Neovim installed successfully"
     fi
 }
