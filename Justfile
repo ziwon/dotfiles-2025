@@ -63,6 +63,9 @@ install-mise:
   mkdir -p ~/.config/mise
   ln -sf {{justfile_directory()}}/config/mise/global-config.toml ~/.config/mise/config.toml
 
+install-bash:
+  ln -sf {{justfile_directory()}}/config/shell/bash/bashrc ~/.bashrc
+
 install-tools-brew:
   if command -v brew >/dev/null 2>&1; then brew bundle --file {{justfile_directory()}}/Brewfile; else echo "brew not found; install Homebrew first"; fi
   if [[ "$(uname)" == "Darwin" && "$(uname -m)" == "arm64" ]]; then brew install mactop; fi

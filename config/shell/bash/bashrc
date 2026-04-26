@@ -115,12 +115,13 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-eval "$(/home/aaron/.local/bin/mise activate bash)"
 
-
-export OLLAMA_MODELS=/mnt/d/Workspace/ollama/models
-eval "$(~/.local/bin/mise activate bash)"
-eval "$(~/.local/bin/mise activate bash)"
+# Tool version management
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate bash)"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+    eval "$("$HOME/.local/bin/mise" activate bash)"
+fi
 
 # Development aliases
 alias ll='ls -alF'
@@ -161,7 +162,7 @@ alias mi='mise install'
 alias mu='mise use'
 
 # WSL2 Clipboard integration
-if grep -q "microsoft" /proc/version; then
+if grep -q "microsoft" /proc/version 2>/dev/null; then
     export DISPLAY=:0.0
     # Use win32yank for better WSL clipboard
     if command -v win32yank.exe &> /dev/null; then
@@ -169,3 +170,6 @@ if grep -q "microsoft" /proc/version; then
         alias pbpaste='win32yank.exe -o'
     fi
 fi
+
+# Machine-specific bash configuration
+[ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"

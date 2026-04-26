@@ -143,6 +143,7 @@ just doctor
 - `~/.gitconfig.work` - Work-specific git settings  
 - `~/.zshrc.local` - Local zsh customizations
 - `~/.zshrc.work` - Work-specific zsh settings
+- `~/.bashrc.local` - Local bash customizations
 - `~/.config/zsh/local.example.zsh` - Example snippets for machine-specific zsh settings
 
 Git identity is intentionally not tracked in the shared `gitconfig`. Start from
