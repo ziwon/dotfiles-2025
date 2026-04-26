@@ -131,6 +131,9 @@ dotfiles-2025/
 
 # Check nvim health
 nvim --headless -c "checkhealth" -c "qa"
+
+# Check the dotfiles environment
+just doctor
 ```
 
 ## 🔧 Customization
@@ -140,6 +143,7 @@ nvim --headless -c "checkhealth" -c "qa"
 - `~/.gitconfig.work` - Work-specific git settings  
 - `~/.zshrc.local` - Local zsh customizations
 - `~/.zshrc.work` - Work-specific zsh settings
+- `~/.config/zsh/local.example.zsh` - Example snippets for machine-specific zsh settings
 
 ### **Theme Customization**
 - oh-my-posh themes: `~/Workspace/oh-my-posh/themes/`

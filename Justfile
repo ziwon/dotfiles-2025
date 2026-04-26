@@ -4,6 +4,9 @@ default: install
 
 install: install-tools install-git install-nvim install-tmux install-zsh install-configs install-claude
 
+doctor:
+  ./hack/utils/doctor.sh
+
 bootstrap: install-just
 
 install-just:

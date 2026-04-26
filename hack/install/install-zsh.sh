@@ -51,6 +51,7 @@ mkdir -p "$HOME/.config/zsh"
 ln -sf "$CUR_DIR/../../config/shell/zsh/functions.zsh" "$HOME/.config/zsh/functions.zsh"
 ln -sf "$CUR_DIR/../../config/shell/zsh/tmux.zsh" "$HOME/.config/zsh/tmux.zsh"
 ln -sf "$CUR_DIR/../../config/shell/zsh/themes.zsh" "$HOME/.config/zsh/themes.zsh"
+ln -sf "$CUR_DIR/../../config/shell/zsh/local.example.zsh" "$HOME/.config/zsh/local.example.zsh"
 ln -sfn "$CUR_DIR/../../config/shell/zsh/fzf" "$HOME/.config/zsh/fzf"
 ln -sfn "$CUR_DIR/../../config/shell/zsh/completions" "$HOME/.config/zsh/completions"
 
